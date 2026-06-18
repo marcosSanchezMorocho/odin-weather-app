@@ -3,6 +3,77 @@
     margin: 0;
 }
 
-html, body {
+html{
     height: 100%;
 }
+
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.search-button {
+    background-color: transparent;
+    border: none;
+    border-width: 0px;
+    padding: 3px 8px;
+}
+
+.search-input {
+    border: none;
+    flex: 1;
+    height: 30px;
+    background-color: transparent;
+    margin-left: 20px;
+}
+
+.search-input:focus {
+    outline: none;
+}
+
+.search-bar {
+    border: 2px solid lightgray;
+    background-color: white;
+    border-radius: 50px;
+    display: flex;
+    overflow: hidden;
+    justify-content: space-between;
+    max-width: 50%;
+    padding: 5px;
+}
+
+.search-bar:focus-within {
+    background-color: whitesmoke;
+}
+
+.search-div {
+    background-color: lightskyblue;
+    flex: 1;
+    margin: 10% 5%;
+    min-height: 50%;
+}
+
+.weather-display {
+    background-color: blueviolet;
+    flex: 1;
+}
+
+main {
+    margin: 50px 0;
+    min-height: 100%;
+    justify-content: space-around;
+    text-align: center;
+    display: flex;
+    flex-flow: column wrap;
+    flex: 1;
+}
+
+.content-wrapper {
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+    flex: 10;
+    align-items: center;
+}
+
