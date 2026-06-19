@@ -9,23 +9,30 @@
 </head>
 <body>
     <main>
-        <div>
-            <h1>Weather Prediction</h1>
-            <h2>Where we are right about 50% of the time</h2>
-        </div>
-        <div class="content-wrapper">
-            <div class="search-div">
-                <form action="" id="search-form" class="search-bar">
-                    <input type="text" name="location" class="search-input" required>
-                    <button class="search-button"><img src="images/search_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.png" alt="Search"></button>
-                </form>
+        <nav>
+            <div class="logo-div">
+                <img src="images/nest_farsight_weather_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.svg" alt="Cloud icon">
+                <h1>WEATHER STUFF</h1>
             </div>
+            
+            <form action="" id="search-form" class="search-bar">
+                <input type="text" name="location" class="search-input" required placeholder="Location">
+                <button class="search-button"><img src="images/search_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.png" alt="Search"></button>
+            </form>
+        </nav>
+            
+        <div class="weather-display">
 
-            <div class="weather-display">
+            <div class="current-weather">
+                <h2 class="location-display"></h2>
+                
+            </div>
+            <div class="weekly-weather">
 
             </div>
         </div>
+
        
-    <main>
+    </main>
 </body>
 </html>

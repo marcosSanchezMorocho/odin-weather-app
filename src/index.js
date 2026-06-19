@@ -19,7 +19,7 @@ async function getWeatherData(location) {
         }
         return await response.json();
     } catch (e) {
-        console.log(e);
+        alert(e);
     }
 }
 
@@ -31,3 +31,38 @@ function cleanupData(weatherData) {
     }
 }
 
+async function getUserLocation() {
+    try {
+        const response = await fetch("https://ipapi.co/json/");
+        if(!response.ok){
+            throw new Error("Something went wrong: " + response.status);
+        }
+        const jsonData = await response.json();
+        console.log(jsonData.city);
+        return {city:jsonData.city, region:jsonData.region};
+    } catch (e) {
+        alert(e);
+    }
+}
+
+function loadCurrentWeather() {
+
+}
+
+function loadWeeklyWeather() {
+
+}
+
+(async function loadInitialWeather() {
+    const userLocation = await getUserLocation();
+    console.log(userLocation);
+
+    const locationDisplay = document.querySelector(".location-display");
+    locationDisplay.textContent = `${userLocation.city}, ${userLocation.region}`;
+
+    const weatherData = await getWeatherData(userLocation.city);
+    if(weatherData) {
+        const cleanData = cleanupData();
+    }
+    
+})();
