@@ -4,8 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Weather Predictions</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="index.js"></script>
 </head>
 <body>
     <main>
@@ -15,7 +13,7 @@
                 <h1>WEATHER STUFF</h1>
             </div>
             
-            <form action="" id="search-form" class="search-bar">
+            <form action="" id="search-form" class="search-bar" autocapitalize="on">
                 <input type="text" name="location" class="search-input" required placeholder="Location">
                 <button class="search-button"><img src="images/search_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.png" alt="Search"></button>
             </form>
@@ -23,9 +21,17 @@
             
         <div class="weather-display">
 
-            <div class="current-weather">
+            <div class="today-weather">
                 <h2 class="location-display"></h2>
-                
+                <div class="current-weather">
+                    <img class="weather-icon" src="images/error_50dp_0F7173_FILL0_wght400_GRAD0_opsz48.png" alt="">
+                    <h2 class="current-temp"></h2>
+                    <h3 class="current-precip">Precipitation:</h3>
+                    <h3 class="current-wind">Windspeed:</h3>
+                    <h3 class="current-humid">Humidity:</h3>
+                </div>
+                <div class="hourly-weather"></div>
+
             </div>
             <div class="weekly-weather">
 
