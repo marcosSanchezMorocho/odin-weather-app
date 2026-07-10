@@ -4,24 +4,47 @@ import './style.css'
     document.querySelector("#search-form").addEventListener("submit", loadSearchedWeather)
 })();
 
+function showError(message) {
+    const errorElement = document.querySelector(".error-message");
+    if (errorElement) {
+        errorElement.textContent = message;
+        errorElement.style.display = "block";
+    } else {
+        alert(message);
+    }
+}
+
+function clearError() {
+    const errorElement = document.querySelector(".error-message");
+    if (errorElement) {
+        errorElement.textContent = "";
+        errorElement.style.display = "none";
+    }
+}
+
 async function loadSearchedWeather(e) { 
     e.preventDefault();
+    clearError();
     const value = document.querySelector(".search-input").value;
 
     if(value.trim()){
-        const cleanValue = value.trim
-        console.log(value);
-        
-        const weatherData = await getWeatherData(value);
-        if(weatherData){
-            displayLocation(value);
-            loadTodayWeather(weatherData);
-        }
-        else {
-            alert("Location not found")
+        const cleanValue = value.trim();
+
+        try {
+            const weatherData = await getWeatherData(cleanValue);
+            if(weatherData && weatherData.currentConditions && weatherData.days?.length){
+                displayLocation(cleanValue);
+                loadTodayWeather(weatherData);
+                loadWeeklyWeather(weatherData);
+            }
+            else {
+                showError("Location not found or weather data is unavailable.");
+            }
+        } catch (error) {
+            showError(error.message || "Unable to load weather right now.");
         }
     } else {
-        console.log("Please input a location");
+        showError("Please input a location.");
     }
 }
 
@@ -33,9 +56,16 @@ async function getWeatherData(location) {
         if (!response.ok) {
             throw new Error("Something went wrong: " + response.status);
         }
-        return await response.json();
+
+        const weatherData = await response.json();
+        if (!weatherData?.currentConditions || !weatherData?.days?.length) {
+            throw new Error("The weather service returned incomplete data.");
+        }
+
+        return weatherData;
     } catch (e) {
-        alert(e);
+        console.error(e);
+        throw e;
     }
 }
 
@@ -93,10 +123,13 @@ async function getUserLocation() {
             throw new Error("Something went wrong: " + response.status);
         }
         const jsonData = await response.json();
-        console.log(jsonData.city);
+        if (!jsonData?.city) {
+            throw new Error("Unable to detect your location.");
+        }
         return {city:jsonData.city};
     } catch (e) {
-        alert(e);
+        console.error(e);
+        throw e;
     }
 }
 
@@ -110,7 +143,16 @@ function loadTodayWeather(weatherData) {
     displayHourlyWeather(hourlyWeather);
 }
 
+function animateEntry(element) {
+    element.classList.remove("animate-in");
+    void element.offsetWidth;
+    element.classList.add("animate-in");
+}
+
 function displayCurrentWeather(weatherData) {
+    const currentWeatherContainer = document.querySelector(".current-weather");
+    animateEntry(currentWeatherContainer);
+
     const icon = document.querySelector(".weather-icon");
     icon.src = `images/weather-icons/` + weatherData.icon + `.png`;
     icon.alt = weatherData.icon;
@@ -122,7 +164,7 @@ function displayCurrentWeather(weatherData) {
     precip.textContent = "Precipitation: " + weatherData.precip + `%`;
 
     const wind = document.querySelector(".current-wind");
-    wind.textContent = "Wind Speed: " + weatherData.windspeed + "km/h";
+    wind.textContent = "Wind Speed: " + weatherData.windspeed + " km/h";
 
     const humid = document.querySelector(".current-humid");
     humid.textContent = "Humidity: " + weatherData.humidity;
@@ -137,6 +179,7 @@ function displayHourlyWeather(weatherData) {
     weatherData.forEach(hour => {
         const hourWeather = document.createElement("div");
         hourWeather.classList.add("hour-weather");
+        animateEntry(hourWeather);
 
         const temp = document.createElement("h2");
         temp.textContent = hour.temp + "º C";
@@ -169,6 +212,7 @@ function displayWeeklyWeather(weekWeather) {
     weekWeather.forEach(day => {
         const dayDiv = document.createElement("div");
         dayDiv.classList.add("day-weather")
+        animateEntry(dayDiv);
 
         const daySummary = document.createElement("div");
         daySummary.classList.add("day-summary");
@@ -213,15 +257,19 @@ function displayLocation(location) {
 }
 
 (async function loadInitialWeather() {
-    const userLocation = await getUserLocation();
-    displayLocation(userLocation.city);
+    try {
+        const userLocation = await getUserLocation();
+        displayLocation(userLocation.city);
 
-    const weatherData = await getWeatherData(userLocation.city);
-    console.log(weatherData);
-    if(weatherData) {
-        console.log(weatherData);
-        loadTodayWeather(weatherData);
-        loadWeeklyWeather(weatherData);
+        const weatherData = await getWeatherData(userLocation.city);
+        if(weatherData && weatherData.currentConditions && weatherData.days?.length) {
+            loadTodayWeather(weatherData);
+            loadWeeklyWeather(weatherData);
+        }
+        else {
+            showError("Unable to load weather for your location.");
+        }
+    } catch (error) {
+        showError(error.message || "Unable to load weather right now.");
     }
-    
 })();
